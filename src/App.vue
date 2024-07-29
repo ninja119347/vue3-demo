@@ -35,7 +35,7 @@
           style="color: #F56C6C;">
           Delete
         </el-button>
-        <el-button link type="primary" size="small">Edit</el-button>
+        <el-button link type="primary" size="small" @click="handleEdit(scope.row)">Edit</el-button>
       </template>
     </el-table-column>
     </el-table>
@@ -52,11 +52,8 @@
         <el-input v-model="tableForm.phone" autocomplete="off" />
       </el-form-item>
       <el-form-item label="状态" :label-width="80">
-        <el-select v-model="tableForm.state" placeholder="Please select a state">
-          <el-option label="0" value="shanghai" />
-          <el-option label="1" value="beijing" />
-        </el-select>
-      </el-form-item>
+        <el-input v-model="tableForm.state" placeholder="Please select a state"/>
+        </el-form-item>
       <el-form-item label="地址" :label-width="80">
         <el-input v-model="tableForm.address" autocomplete="off" />
       </el-form-item>
@@ -154,11 +151,15 @@ let handleRowClick = () => {
 // 确认
 let dialogconfirm = () => {
   dialogFormVisible.value = false
+  if(dialogType.value === 'add') {
   //1. 拿到数据
-
   //2. 添加到table中
-  tableData.value.push({id:(tableData.value.length+1).toString(),...tableForm.value}
-    )
+    tableData.value.push({id:(tableData.value.length+1).toString(),...tableForm.value} )
+  } else {
+    let index = tableData.value.findIndex(item => item.id === tableForm.value.id)
+    tableData.value[index] = tableForm.value
+  }
+  
 }
 //删除一条
 let handleRowDel = ({id}) => {
@@ -169,7 +170,7 @@ let handleRowDel = ({id}) => {
   tableData.value.splice(index, 1)
   // tableData.value = tableData.value.filter(item => item.id !== row.id)
 }
-//删除选中
+//删除多个选中
 let handleDelList = () => {
   //1. 通过id获取条目对应的索引值
   multipleSelection.value.forEach(id => {
@@ -178,6 +179,13 @@ let handleDelList = () => {
   //2. 通过索引值删除对应条目
   // tableData.value = tableData.value.filter(item => !indexs.includes(item.id))
 }
+//编辑
+const handleEdit = (row) => {
+  dialogFormVisible.value = true
+  dialogType.value = "edit"
+  console.log(row)
+  tableForm.value = { ...row }
+  }
 </script>
 
 <style scoped>
