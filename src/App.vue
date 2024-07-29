@@ -5,12 +5,18 @@
       <h2>最简单的 CRUD Demo</h2>
     </div>
     <!-- query -->
-    <div class="query">
-      <el-input v-model="queryInput" style="width: 240px" placeholder="Please input" />
-      <el-button type="primary">Add</el-button>
+    <div class="query-box">
+      <el-input class="query-input" v-model="queryInput"  placeholder="Please input" />
+      <el-button type="primary" @click="handleAdd" >Add</el-button>
     </div>
-    <!-- table -->
-    <el-table :data="tableData" style="width: 100%">
+    <!-- table -->  
+    <el-table
+    border
+    ref="multipleTableRef"
+    :data="tableData"
+    style="width: 100%"
+    @selection-change="handleSelectionChange">
+    <el-table-column type="selection" width="55" />
     <el-table-column fixed prop="date" label="Date" width="150" />
     <el-table-column prop="name" label="Name" width="120" />
     <el-table-column prop="state" label="State" width="120" />
@@ -26,6 +32,41 @@
       </template>
     </el-table-column>
     </el-table>
+    <!------------------- dialog --------------------->
+    <el-dialog v-model="dialogFormVisible" title="Shipping address" width="500">
+    <el-form :model="tableForm">
+      <el-form-item label="姓名" :label-width="80">
+        <el-input v-model="tableForm.name" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="邮箱" :label-width="80">
+        <el-input v-model="tableForm.email" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="电话" :label-width="80">
+        <el-input v-model="tableForm.phone" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="状态" :label-width="80">
+        <el-select v-model="tableForm.state" placeholder="Please select a state">
+          <el-option label="0" value="shanghai" />
+          <el-option label="1" value="beijing" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="地址" :label-width="80">
+        <el-input v-model="tableForm.address" autocomplete="off" />
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">Cancel</el-button>
+        <el-button type="primary" @click="dialogFormVisible = false">
+          Confirm
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
+
+
+
+
   </div>
 </template>
 
@@ -69,8 +110,24 @@ let tableData = ref([ {
     zip: 'CA 90036',
     tag: 'Office',
   },])
-// methods
+let multipleSelection = ref([])
+let dialogFormVisible = ref(false)
+let tableForm = ref({
+  name: '张三',
+  email: '123@qq.com ',
+  phone: '1192371384',
+  state: '在职',
+  address: '广东省',
+},)
 
+  // methods
+const handleSelectionChange = (val) => {
+  multipleSelection.value = val
+  console.log(multipleSelection.value)
+}
+let handleAdd = () => {
+  dialogFormVisible.value = true
+}
 let handleRowClick = () => {
   console.log('click')
 }
@@ -79,9 +136,21 @@ let handleRowClick = () => {
 <style scoped>
 .table-box {
   width: 800px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  margin: 200px auto;
+}
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.query-box {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.el-iput {
+  width: 240px;
+}
+.query-input {
+  width: 200px;
 }
 </style>
