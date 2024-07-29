@@ -6,7 +6,7 @@
     </div>
     <!-- query -->
     <div class="query-box">
-      <el-input class="query-input" v-model="queryInput"  placeholder="Please search by name" />
+      <el-input class="query-input" v-model="queryInput"  placeholder="Please search by name" @input="handleQueryName" />
       <div class="btn-list">
         <el-button type="primary" @click="handleAdd" >Add</el-button>
       <el-button type="danger" @click="handleDelList"   v-if="multipleSelection.length>0"  >Mul-delete</el-button>
@@ -71,6 +71,7 @@
 </template>
 
 <script setup>
+import { ta } from 'element-plus/es/locales.mjs';
 import { ref } from 'vue'
 // data
 let queryInput = ref('')
@@ -129,8 +130,20 @@ let tableForm = ref({
   address: '广东省',
 },)
 let dialogType = ref('add')
-
+let tableDataCopy = Object.assign([],tableData.value)
   // methods
+
+let handleQueryName = (val) => {
+  tableData.value = tableDataCopy
+  // console.log(queryInput.value)
+  if (val.length>0){
+    tableData.value = tableData.value.filter(item => (item.name).toLowerCase().match(val.toLowerCase()))
+  }else{
+    console.log('length=0')
+    tableData.value = tableDataCopy
+  }
+  
+}
   //选中
 const handleSelectionChange = (val) => {
   multipleSelection.value = []
