@@ -222,3 +222,8 @@ const handleEdit = (row) => {
   width: 200px;
 }
 </style>
+<!-- /*TODO
+* axios 请求后端接口
+* 使用go完成增删改查的接口
+* mysql数据库
+*/   -->
