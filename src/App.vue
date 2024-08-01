@@ -167,11 +167,12 @@ let dialogconfirm = () => {
   if(dialogType.value === 'add') {
   //1. 拿到数据
   //2. 添加到table中
-    tableData.value.push({id:(tableData.value.length+1).toString(),...tableForm.value} )
+    tableData.value.push({id:(tableData.value.length+1).toString(),...tableForm.value})
   } else {
     let index = tableData.value.findIndex(item => item.id === tableForm.value.id)
     tableData.value[index] = tableForm.value
   }
+  tableDataCopy = Object.assign([],tableData.value)
   
 }
 //删除一条
@@ -182,6 +183,7 @@ let handleRowDel = ({id}) => {
   //2. 通过索引值删除对应条目
   tableData.value.splice(index, 1)
   // tableData.value = tableData.value.filter(item => item.id !== row.id)
+  tableDataCopy = Object.assign([],tableData.value)
 }
 //删除多个选中
 let handleDelList = () => {
@@ -198,6 +200,7 @@ const handleEdit = (row) => {
   dialogType.value = "edit"
   console.log(row)
   tableForm.value = { ...row }
+  tableDataCopy = Object.assign([],tableData.value)
   }
 </script>
 
