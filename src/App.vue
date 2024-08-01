@@ -21,9 +21,9 @@
     style="width: 100%"
     @selection-change="handleSelectionChange">
     <el-table-column type="selection" width="55" />
-    <el-table-column prop="name" label="Name" width="120" />
+    <el-table-column prop="username" label="Name" width="120" />
     <el-table-column prop="email" label="Email" width="200" />
-    <el-table-column prop="state" label="State" width="120" />
+    <el-table-column prop="status" label="State" width="120" />
     <el-table-column prop="phone" label="Phone" width="120" />
     <el-table-column prop="address" label="Address" width="300" />
     <el-table-column fixed="right" label="Operations" min-width="120">
@@ -73,6 +73,8 @@
 <script setup>
 import { ta } from 'element-plus/es/locales.mjs';
 import { ref } from 'vue'
+import request from './utils/request.js'
+
 // data
 let queryInput = ref('')
 let tableData = ref([ {
@@ -123,16 +125,21 @@ let tableData = ref([ {
 let multipleSelection = ref([])
 let dialogFormVisible = ref(false)
 let tableForm = ref({
-  name: '张三',
+  username: '张三',
   email: '123@qq.com ',
   phone: '1192371384',
-  state: '在职',
+  status: '在职',
   address: '广东省',
 },)
 let dialogType = ref('add')
 let tableDataCopy = Object.assign([],tableData.value)
   // methods
-
+const getTableData = async (cur = 1) => {
+  let res = await request.get('api/user/list',  {pageSize: 10, pageNum:cur})
+  tableData.value = res.data
+  console.log(res)
+}
+getTableData()
 let handleQueryName = (val) => {
   tableData.value = tableDataCopy
   // console.log(queryInput.value)
